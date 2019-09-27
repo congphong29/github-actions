@@ -1,0 +1,42 @@
+name: ASP.NET Core CI
+
+on: 
+  push:
+    branches:
+    - master
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.108
+    - name: Build with dotnet
+      run: |
+        cd src/DemoApp/
+        dotnet build
+    - name: build docker
+      run: |
+        src cd/DemoApp/
+        ls -l
+        echo 'Docker login'
+        docker login -u 1076 --password-stdin < password.txt
+        echo 'Docker run image'
+        docker build -t 1076/aspnetapp:latest .
+        echo 'Push image'
+        docker push 1076/aspnetapp:latest
+        
+  test:
+
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build with dotnet
+      run: |
+        cd test/DemoApp.Tests/
+        dotnet test
