@@ -21,7 +21,7 @@ jobs:
         dotnet build
     - name: build docker
       run: |
-        src cd/DemoApp/
+        cd src/DemoApp/
         ls -l
         echo 'Docker login'
         docker login -u 1076 --password-stdin < password.txt
